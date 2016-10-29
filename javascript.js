@@ -40,7 +40,7 @@ angular.module('portalApp')
 		initialized.value = true;
 
 		// Place your init code here:
-		data.value={message:"Welcome to Portal SDK!"};
+		data.value={message:"Welcome to Mrs Waterloo"};
 		items.value = [
 			{
 				title:'Item 1',
@@ -101,3 +101,11 @@ angular.module('portalApp')
 		return output;
 	}
 });
+
+function getCourse(sub,code) {
+	var apiKey = "495cd8d2ca5f93e44f1171f5b58e59a0";
+    var course = document.getElementById("course");
+    var code = document.getElementById("code");
+    var time = proxy.GetProxy('https://api.uwaterloo.ca/v2/courses/'+course+'/'+code+'/schedule.json?key=' + apiKey);
+    
+}
