@@ -40,7 +40,7 @@ angular.module('portalApp')
 		initialized.value = true;
 
 		// Place your init code here:
-		data.value={message:"Welcome to Mrs Waterloo"};
+		data.value={message:"Welcome to Portal SDK!"};
 		items.value = [
 			{
 				title:'Item 1',
