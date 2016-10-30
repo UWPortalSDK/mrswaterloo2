@@ -7,7 +7,10 @@ angular.module('portalApp')
     $scope.data = mrswaterloo2Factory.data;
 	$scope.items = mrswaterloo2Factory.items;
 	$scope.detailsItem = mrswaterloo2Factory.detailsItem;
-	
+    
+    
+    $scope.arr = mrswaterloo2Factory.resultClass;
+	$scope.arrtime = mrswaterloo2Factory.resultTime;
     // initialize the service
     mrswaterloo2Factory.init($scope);
 
@@ -20,6 +23,12 @@ angular.module('portalApp')
 		$scope.detailsItem.value = item;		
 		$scope.portalHelpers.showView('mrswaterloo2Details.html', 2);
 	}
+    
+    $scope.getJSON = mrswaterloo2Factory.getJSON;
+    $scope.getCourse = mrswaterloo2Factory.getCourse;
+    
+   //document.getElementById("time").innerHTML = "helllllllllllllo";
+
 	
 }])
 // Factory maintains the state of the widget
@@ -74,6 +83,49 @@ angular.module('portalApp')
 			}
 		];
 	}
+    
+    var getJSON = function(url, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("get", url, true);
+        xhr.responseType = "json";
+        xhr.onload = function() {
+          var status = xhr.status;	
+          if (status == 200) {
+            callback(null, xhr.response);
+          } else {
+            callback(status);
+          }
+        };
+        xhr.send();
+	};
+    
+    function getCourse() {
+        var apiKey = "495cd8d2ca5f93e44f1171f5b58e59a0";
+        var course = document.getElementById("course");
+        var code = document.getElementById("code");
+        var url = 'https://api.uwaterloo.ca/v2/courses/'+course.value+'/'+code.value+'/schedule.json?key='+apiKey;
+        getJSON(url, function(error,data){
+             traverse(data);
+            $rootScope.refresh();
+             //document.getElementById("time").innerHTML = data;
+         });
+	};
+    
+    var resultClass = []
+    var resultTime = []
+    
+    function traverse(data) {
+        var array = data["data"];
+        for (var i = 0;i < array.length;++i) {
+            resultClass[i] = array[i]["classes"][0]["location"]["building"] + " " + array[i]["classes"][0]["location"]["room"];
+        }
+        for (var i = 0;i < array.length;++i) {
+            resultTime[i] = array[i]["classes"][0]["date"]["weekdays"] + "-" + array[i]["classes"][0]["date"]["start_time"] + "-" + array[i]["classes"][0]["date"]["end_time"];
+        }
+        //document.getElementById("time").innerHTML = resultClass;
+        //document.getElementById("time").innerHTML = resultTime;
+        //return resultClass;
+	}
 
 
 	// Expose init(), and variables
@@ -81,7 +133,12 @@ angular.module('portalApp')
 		init: init,
 		data: data,
 		detailsItem: detailsItem,
-		items: items
+		items: items,
+        getJSON: getJSON,
+        getCourse: getCourse,
+        resultClass: resultClass,
+        resultTime: resultTime,
+        traverse: traverse
 	};
 
 }])
@@ -102,10 +159,4 @@ angular.module('portalApp')
 	}
 });
 
-function getCourse(sub,code) {
-	var apiKey = "495cd8d2ca5f93e44f1171f5b58e59a0";
-    var course = document.getElementById("course");
-    var code = document.getElementById("code");
-    var time = proxy.GetProxy('https://api.uwaterloo.ca/v2/courses/'+course+'/'+code+'/schedule.json?key=' + apiKey);
-    
-}
+
