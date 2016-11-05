@@ -85,6 +85,7 @@ angular.module('portalApp')
 	};
 
 }])
+
 // Custom directive example
 .directive('mrswaterloo2DirectiveName', ['$http', function ($http) {
 	return {
@@ -93,6 +94,8 @@ angular.module('portalApp')
 		}
 	};
 }])
+
+
 // Custom filter example
 .filter('mrswaterloo2FilterName', function () {
 	return function (input, arg1, arg2) {
